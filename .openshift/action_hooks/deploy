@@ -1,15 +1,17 @@
 #!/bin/bash
 # Pyramid OpenShift post-deploy pre-start configuration
 
-export PYTHON=python-2.7
-export PATH=$PATH:~/$PYTHON/virtenv/bin/
-export PYTHON_EGG_CACHE=~/$PYTHON/virtenv/lib/python2.7/site-packages
-
 APP=pyramidapp
 
-source ~/$PYTHON/virtenv/bin/activate
+if [[ -e $OPENSHIFT_PRIMARY_CARTRIDGE_DIR/bin/activate_virtenv ]]; then
+    # Python 2.7 (and 3.3?)
+    source $OPENSHIFT_PRIMARY_CARTRIDGE_DIR/bin/activate_virtenv
+else
+    # Python 2.6
+    source $OPENSHIFT_PRIMARY_CARTRIDGE_DIR/virtenv/bin/activate
+fi
 
-if [ -z $OPENSHIFT_DB_HOST ]
+if [ -z $OPENSHIFT_MYSQL_DB_HOST ]
 then
     echo 1>&2
     echo 1>&2
